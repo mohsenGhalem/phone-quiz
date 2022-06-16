@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dart_console/dart_console.dart';
 
 class Contacts {
   int phoneNumber;
@@ -25,7 +26,7 @@ class Operation {
   void addContact() {
     _contacts.add(Contacts(phoneNumber, birthday, name));
     print("Adding Contact....\n");
-    sleep(Duration(seconds: 2));
+    sleep(Duration(milliseconds: 1500));
     print("Contact Added !\n");
   }
 
@@ -44,13 +45,12 @@ class Operation {
   void deleteContact() {
     int position = searchContact();
     if (_contacts.isEmpty) {
-      print("There's no contact to delete !");
-    }
-    else {
+      print("There's no contacts to delete !");
+    } else {
       if (position >= 0) {
         _contacts.removeAt(position);
         print("Removing Contact....\n");
-        sleep(Duration(seconds: 2));
+        sleep(Duration(milliseconds: 1500));
         print("Contact Removed !\n");
       } else {
         print("Error! : The Contact Doesn't Exist\n");
@@ -72,8 +72,9 @@ class Operation {
 
   void printSpecificContact() {
     int position = searchContact();
-    if(position<0){print("Contact Not Found !");}
-    else{
+    if (position < 0) {
+      print("Contact Not Found !");
+    } else {
       print(
           "Name : ${_contacts[position].name}\nPhone : 0${_contacts[position].phoneNumber}\nBirthDay : ${_contacts[position].birthday}");
     }
@@ -85,61 +86,140 @@ class Operation {
 void menu() {
   print('----- Welcome to Contact Folder -----\n'
       '------------------- Menu ----------------\n'
-      '1 - Add Contact\n2- Search Contact\n3- Delete Contact\n4- Print Specific Contact\n5- Print All Contacts\n0- Exit Program\n'
+      '1 - Add Contact\n2- Search Contact\n3- Delete Contact\n4- Print Specific Contact\n5- Print All Contacts\n6- Modify Contact\n0- Exit Program\n'
       '---------------Choose One -----------------\n'
       'Your answer : ');
 }
 
-void searchMenu(){
+void searchMenu() {
   print('----- Search Contact -----\n'
-      '1 - Search by Name\n 2- Search by Phone\n'
+      '1 - Search by Name\n2- Search by Phone\n'
+      '---------------Choose One ---------------\n'
+      'Your answer : ');
+}
+
+void deleteMenu() {
+  print('----- Search Contact -----\n'
+      '1 - Search by Name\n2- Search by Phone\n'
       '---------------Choose One ---------------\n'
       'Your answer : ');
 }
 
 void main() {
+  final console = Console();
   int phoneNumber;
   String name;
   String birthday;
   int menuIndex;
-do {
-  menu();
-  menuIndex = int.parse(stdin.readLineSync()!);
+  do {
+    print(Process.runSync("clear", [], runInShell: true).stdout);
+    menu();
+    menuIndex = int.parse(stdin.readLineSync()!);
 
-  switch (menuIndex) {
-    case 1:
-      print('phone : ');
-      phoneNumber = int.parse(stdin.readLineSync()!);
-      print('name : ');
-      name = stdin.readLineSync().toString();
-      print('birthday (YYYY/MM/DD) : ');
-      birthday = stdin.readLineSync().toString();
+    switch (menuIndex) {
+      //Add contact
+      case 1:
+        print('phone : ');
+        phoneNumber = int.parse(stdin.readLineSync()!);
+        print('name : ');
+        name = stdin.readLineSync().toString();
+        print('birthday (YYYY/MM/DD) : ');
+        birthday = stdin.readLineSync().toString();
 
-      Operation(phoneNumber: phoneNumber, name: name, birthday: birthday)
-          .addContact();
+        Operation(phoneNumber: phoneNumber, name: name, birthday: birthday)
+            .addContact();
 
-      break;
-    case 2 :
-      int place;
-      p:
-      searchMenu();
-      place = int.parse(stdin.readLineSync()!);
-      switch (place) {
-        case 1 :
-          print("Enter name :");
-          name = stdin.readLineSync().toString().toLowerCase();
-          if (Operation(name: name).searchContact() == -1) {
-            print("Contact Not Found !\n");
-          }
-          else {
-            Operation(name: name).printSpecificContact();
-          }
-          break;
-      }
+        break;
+      //Search Contact
+      case 2:
+        int place;
 
-      break;
-  }
-}while(menuIndex>0);
-  Operation().printAllContact();
+        searchMenu();
+        place = int.parse(stdin.readLineSync()!);
+        switch (place) {
+          // by Name
+          case 1:
+            print("Enter name :");
+            name = stdin.readLineSync().toString().toLowerCase();
+            if (Operation(name: name).searchContact() == -1) {
+              print("Contact Not Found !\n");
+            } else {
+              Operation(name: name).printSpecificContact();
+            }
+            break;
+          //by Phone
+          case 2:
+            print("Enter phone :");
+            phoneNumber = int.parse(stdin.readLineSync()!);
+            if (Operation(phoneNumber: phoneNumber).searchContact() == -1) {
+              print("Contact Not Found !\n");
+            } else {
+              Operation(phoneNumber: phoneNumber).printSpecificContact();
+            }
+            break;
+        }
 
+        break;
+      //Delete Contact
+      case 3:
+
+        deleteMenu();
+        int place = int.parse(stdin.readLineSync()!);
+        switch (place) {
+          case 1:
+            print("Enter name :");
+            name = stdin.readLineSync().toString().toLowerCase();
+            if (Operation(name: name).searchContact() == -1) {
+              print("Contact Not Found !\n");
+            } else {
+              Operation(name: name).deleteContact();
+            }
+            break;
+
+          case 2:
+            phoneNumber = int.parse(stdin.readLineSync()!);
+            if (Operation(phoneNumber: phoneNumber).searchContact() == -1) {
+              print("Contact Not Found !\n");
+            } else {
+              Operation(phoneNumber: phoneNumber).deleteContact();
+            }
+            break;
+          default : print("Error !");
+        }break;
+        //Print Specific Contact
+      case 4:
+        searchMenu();
+        int place = int.parse(stdin.readLineSync()!);
+        switch (place) {
+          case 1:
+            print("Enter name :");
+            name = stdin.readLineSync().toString().toLowerCase();
+            if (Operation(name: name).searchContact() == -1) {
+              print("Contact Not Found !\n");
+            } else {
+              Operation(name: name).printSpecificContact();
+            }
+            break;
+
+          case 2:
+            phoneNumber = int.parse(stdin.readLineSync()!);
+            if (Operation(phoneNumber: phoneNumber).searchContact() == -1) {
+              print("Contact Not Found !\n");
+            } else {
+              Operation(phoneNumber: phoneNumber).printSpecificContact();
+            }
+            break;
+          default : print("Error !");
+        }break;
+        //Print All contacts
+      case 5 :
+
+       _contacts.isNotEmpty? Operation().printAllContact(): print("There's not Contacts to print");
+        break;
+
+    }
+    console.clearScreen();
+  } while (menuIndex > 0);
+
+  print("\nGood Bye\n");
 }
