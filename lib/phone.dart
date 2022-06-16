@@ -9,7 +9,10 @@ class Contacts {
   Contacts(this.phoneNumber, this.birthday, this.name);
 }
 
-List<Contacts> _contacts = [];
+List<Contacts> _contacts = [
+  Contacts(0657291108, "2003/06/05", 'Mohsen'),
+  Contacts(0542488591, "2003/06/05", 'Akram'),
+  ];
 
 class Operation {
   int phoneNumber;
@@ -80,13 +83,35 @@ class Operation {
     }
   }
 
-  void modifyContact() {}
+  void modifyContact(int n,int position) {
+
+    if(position>=0){
+      if(n==1){
+        _contacts[position].name = name;
+      }
+      if(n==2){
+        _contacts[position].phoneNumber = phoneNumber;
+      }
+      if(n==3){
+        _contacts[position].birthday = birthday;
+      }
+    }
+    else {
+      return;
+    }
+  }
+
+
+
+
+
+
 }
 
 void menu() {
   print('----- Welcome to Contact Folder -----\n'
       '------------------- Menu ----------------\n'
-      '1 - Add Contact\n2- Search Contact\n3- Delete Contact\n4- Print Specific Contact\n5- Print All Contacts\n6- Modify Contact\n0- Exit Program\n'
+      '1 - Add Contact\n2- Search Contact\n3- Delete Contact\n4- Print Specific Contact\n5- Print All Contacts\n6- Modify Contact\n7- Save All the Contacts\n0- Exit Program\n'
       '---------------Choose One -----------------\n'
       'Your answer : ');
 }
@@ -217,9 +242,81 @@ void main() {
        _contacts.isNotEmpty? Operation().printAllContact(): print("There's not Contacts to print");
         break;
 
+      case 6:
+        searchMenu();
+        int place = int.parse(stdin.readLineSync()!);
+        switch (place) {
+          case 1:
+            print("Enter name :");
+            name = stdin.readLineSync().toString().toLowerCase();
+            if (Operation(name: name).searchContact() == -1) {
+              print("Contact Not Found !\n");
+            } else {
+              int p = Operation(name: name).searchContact();
+              print("1-Modify Name\n2-Modify PhoneNumber\n3-Modify BirthDay\n"
+                  "----------------------\nYour Answer :");
+              int f = int.parse(stdin.readLineSync()!);
+              switch(f){
+                case 1: modifyName(p);break;
+                case 2: modifyPhone(p);break;
+                case 3: modifyBirth(p);break;
+                default : print("Error!\n");
+              }
+
+            }
+            break;
+
+          case 2:
+            phoneNumber = int.parse(stdin.readLineSync()!);
+            if (Operation(phoneNumber: phoneNumber).searchContact() == -1) {
+              print("Contact Not Found !\n");
+            } else {
+              int p = Operation(phoneNumber: phoneNumber).searchContact();
+              print("1-Modify Name\n2-Modify PhoneNumber\n3-Modify BirthDay\n"
+                  "----------------------\nYour Answer :");
+              int f = int.parse(stdin.readLineSync()!);
+              switch(f){
+                case 1: modifyName(p);break;
+                case 2: modifyPhone(p);break;
+                case 3: modifyBirth(p);break;
+                default : print("Error!\n");
+              }
+            }
+            break;
+          default : print("Error !");
+        }break;
+
     }
     console.clearScreen();
   } while (menuIndex > 0);
 
   print("\nGood Bye\n");
+
 }
+
+void modifyName(int p) {
+
+  print('Enter the New Name :');
+  String nName= stdin.readLineSync().toString();
+  Operation(name: nName).modifyContact(1,p);
+  print("Modifying Contact...");
+  sleep(Duration(milliseconds: 1500));
+  print("Contact Modified !\n");
+}
+void modifyPhone(int p) {
+  print('Enter the New PhoneNumber :');
+  int nPhone= int.parse(stdin.readLineSync()!);
+  Operation(phoneNumber: nPhone).modifyContact(2,p);
+  print("Modifying Contact...");
+  sleep(Duration(milliseconds: 1500));
+  print("Contact Modified !\n");
+}
+void modifyBirth(int p) {
+  print('Enter the New BirthDay :');
+  String nBirth= stdin.readLineSync().toString();
+  Operation(birthday: nBirth).modifyContact(3,p);
+  print("Modifying Contact...");
+  sleep(Duration(milliseconds: 1500));
+  print("Contact Modified !\n");
+}
+

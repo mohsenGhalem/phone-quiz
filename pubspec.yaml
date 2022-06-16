@@ -8,6 +8,8 @@ environment:
 
 dependencies:
   dart_console:
+  excel:
+  path: 
 
 dev_dependencies:
   lints: ^2.0.0
